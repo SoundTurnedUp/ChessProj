@@ -1,0 +1,102 @@
+void GameCreator()
+{
+    bool[] board = new bool[64]; //BoardArray to track if square is occupied by piece
+    for (int i = 0; i < 64; i++)
+    {
+        if (i < 16 || i >= 48) board[i] = true; //marking starting positions as occupied at game start
+    }
+
+    List<Piece> pieces = new List<Piece>(); //List to store all pieces
+    pieces.AddRange(CreatePieces(true, 1));  //white pieces
+    pieces.AddRange(CreatePieces(false, 49)); //black pieces
+
+    List<Piece> CreatePieces(bool isWhite, int startIndex) //Function that can be used for both white + black piece creation
+    {
+        pieces.Add(new King(startIndex + 4, isWhite));
+        pieces.Add(new Queen(startIndex + 3, isWhite));
+        pieces.Add(new Rook(startIndex, isWhite));
+        pieces.Add(new Rook(startIndex + 7, isWhite));
+        pieces.Add(new Bishop(startIndex + 2, isWhite));
+        pieces.Add(new Bishop(startIndex + 5, isWhite));
+        pieces.Add(new Knight(startIndex + 1, isWhite));
+        pieces.Add(new Knight(startIndex + 6, isWhite));
+        for (int i = 0; i < 8; i++)
+        {
+            pieces.Add(new Pawn(startIndex + 8 + i, isWhite));
+        }
+        return pieces;
+    }
+}
+abstract class Piece
+{
+    public bool White { get; protected set; }
+    public int Position { get; protected set; }
+    public bool IsCaptured { get; protected set; }
+    public bool CanMove { get; protected set; }
+
+    public Piece(int position, bool white)
+    {
+        Position = position;
+        White = white;
+        IsCaptured = false;
+        CanMove = true;
+    }
+}
+class King : Piece
+{
+    public bool InCheck { get; private set; }
+
+    public King(int position, bool white) : base(position, white)
+    {
+        InCheck = false;
+    }
+}
+class Queen : Piece
+{
+    public bool IsPinned { get; private set; }
+
+    public Queen(int position, bool white) : base(position, white)
+    {
+        IsPinned = false;
+    }
+}
+class Rook : Piece
+{
+    public bool IsPinned { get; private set; }
+
+    public Rook(int position, bool white) : base(position, white)
+    {
+        IsPinned = false;
+    }
+}
+class Bishop : Piece
+{
+    public bool IsPinned { get; private set; }
+
+    public Bishop(int position, bool white) : base(position, white)
+    {
+        IsPinned = false;
+    }
+}
+class Knight : Piece
+{
+    public bool IsPinned { get; private set; }
+
+    public Knight(int position, bool white) : base(position, white)
+    {
+        IsPinned = false;
+    }
+}
+class Pawn : Piece
+{
+    public bool FirstMove { get; private set; }
+    public bool CanPassant { get; private set; }
+    public bool IsPinned { get; private set; }
+
+    public Pawn(int position, bool white) : base(position, white)
+    {
+        FirstMove = true;
+        CanPassant = false;
+        IsPinned = false;
+    }
+}
