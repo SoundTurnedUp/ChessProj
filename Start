@@ -1,17 +1,43 @@
+GameCreator();
+void ShowBoard(bool[] board, List<Piece> pieces)
+{
+    Console.WriteLine("Chessboard Layout:");
+    for (int row = 7; row >= 0; row--) // Loop from row 8 to row 1
+    {
+        for (int col = 0; col < 8; col++) // Loop through columns in each row
+        {
+            int index = row * 8 + col; // Calculate the index in the board array
+            Piece piece = pieces.FirstOrDefault(p => p.Position == index); // Find the piece at this position
+
+            if (piece != null)
+            {
+                Console.Write(piece.Symbol); // Display the symbol of the piece
+            }
+            else
+            {
+                Console.Write("."); // Empty square
+            }
+        }
+        Console.WriteLine();
+    }
+}
 void GameCreator()
 {
-    bool[] board = new bool[64]; //BoardArray to track if square is occupied by piece
+    bool[] board = new bool[64]; // BoardArray to track if square is occupied by piece
     for (int i = 0; i < 64; i++)
     {
-        if (i < 16 || i >= 48) board[i] = true; //marking starting positions as occupied at game start
+        if (i < 16 || i >= 48) board[i] = true; // Marking starting positions as occupied
     }
 
     List<Piece> pieces = new List<Piece>(); //List to store all pieces
     pieces.AddRange(CreatePieces(true, 1));  //white pieces
     pieces.AddRange(CreatePieces(false, 49)); //black pieces
 
+    ShowBoard(board, pieces);
+
     List<Piece> CreatePieces(bool isWhite, int startIndex) //Function that can be used for both white + black piece creation
     {
+        startIndex--;
         pieces.Add(new King(startIndex + 4, isWhite));
         pieces.Add(new Queen(startIndex + 3, isWhite));
         pieces.Add(new Rook(startIndex, isWhite));
@@ -33,58 +59,80 @@ abstract class Piece
     public int Position { get; protected set; }
     public bool IsCaptured { get; protected set; }
     public bool CanMove { get; protected set; }
+    public char Symbol { get; protected set; }
 
-    public Piece(int position, bool white)
+    public Piece(int position, bool white, char symbol)
     {
         Position = position;
         White = white;
         IsCaptured = false;
         CanMove = true;
+        Symbol = white ? char.ToUpper(symbol) : char.ToLower(symbol); //black pieces are lowercase //white pieces are uppercase
     }
 }
 class King : Piece
 {
     public bool InCheck { get; private set; }
 
-    public King(int position, bool white) : base(position, white)
+    public King(int position, bool white) : base(position, white, 'K')
     {
         InCheck = false;
+    }
+    public void Move()
+    {
+        
     }
 }
 class Queen : Piece
 {
     public bool IsPinned { get; private set; }
 
-    public Queen(int position, bool white) : base(position, white)
+    public Queen(int position, bool white) : base(position, white, 'Q')
     {
         IsPinned = false;
+    }
+    public void Move()
+    {
+
     }
 }
 class Rook : Piece
 {
     public bool IsPinned { get; private set; }
 
-    public Rook(int position, bool white) : base(position, white)
+    public Rook(int position, bool white) : base(position, white, 'R')
     {
         IsPinned = false;
+    }
+    public void Move()
+    {
+
     }
 }
 class Bishop : Piece
 {
     public bool IsPinned { get; private set; }
 
-    public Bishop(int position, bool white) : base(position, white)
+    public Bishop(int position, bool white) : base(position, white, 'B')
     {
         IsPinned = false;
+    }
+    public void Move()
+    {
+
     }
 }
 class Knight : Piece
 {
     public bool IsPinned { get; private set; }
 
-    public Knight(int position, bool white) : base(position, white)
+    public Knight(int position, bool white) : base(position, white, 'N')
     {
         IsPinned = false;
+    }
+    public void Move()
+    {
+
     }
 }
 class Pawn : Piece
@@ -93,10 +141,14 @@ class Pawn : Piece
     public bool CanPassant { get; private set; }
     public bool IsPinned { get; private set; }
 
-    public Pawn(int position, bool white) : base(position, white)
+    public Pawn(int position, bool white) : base(position, white, 'P')
     {
         FirstMove = true;
         CanPassant = false;
         IsPinned = false;
+    }
+    public void Move()
+    {
+
     }
 }
