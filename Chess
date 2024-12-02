@@ -1,4 +1,23 @@
-GameCreator();
+DisplayMenu();
+void DisplayMenu()
+{
+    bool Quit = false;
+    while (Quit == false)
+    {
+        Console.WriteLine("Chess");
+        Console.WriteLine("1. Play game");
+        Console.WriteLine("2. Quit");
+        string choice = Console.ReadLine();
+        if (choice == "1" || choice == "Play" || choice == "play" || choice == "play game" || choice == "Play game")
+        {
+            GameCreator();
+        }
+        if (choice == "2" || choice == "quit" || choice == "Quit")
+        {
+            Quit = true;
+        }
+    }
+}
 void ShowBoard(bool[] board, List<Piece> pieces)
 {
     Console.WriteLine("Chessboard Layout:");
@@ -80,7 +99,9 @@ class King : Piece
     }
     public void Move()
     {
-        
+        Console.WriteLine("Enter move direction");
+        Console.WriteLine("1. Forward left 2. Forward 3. Forward right \n 4. Left X 5. Right \n 6. Backwards left 7. Backwards 8. Backwards right");
+        string direction = Console.ReadLine();
     }
 }
 class Queen : Piece
